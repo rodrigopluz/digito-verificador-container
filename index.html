@@ -4,15 +4,63 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <script src=""></script>
         <title>Digito Verificador de Container</title>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js"></script>
     </head>
     <body>
-        <form action="" method="post">
-            <div class="form-group">
-                <label for="digito">Digito</label>
-                <input type="text" name="digito" id="digito" class="form-control">
+        <nav class="navbar text-center navbar-expand-md navbar-dark bg-dark">
+            <a class="container" href="#">Digito Verificador de Container</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </nav>
+        <main class="container" role="main">&nbsp;</main>
+        <main class="container" role="main">
+            <div class="starter-template">
+                <div class="col-lg-12 row">
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="container">Digito Container</label>
+                            <input type="text" name="container" id="container" class="text-uppercase form-control">
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </main>
     </body>
+    <script>
+        $(document).ready(function () {
+            /**
+            * jquery mask
+            */
+            $('#container').mask('SSSS000000-0');
+        
+            /**
+            * ajax valida digito verificador do container
+            */
+            $('#container').change(function() {
+                if ($('#container').val() != '') {
+                    $.ajax({
+                        url: 'container_verifier_digit.php',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { container: this.value },
+                        success: function(data) {
+                            if (data.status == 'error') alert('Erro, Digito verificador inválido.\nO Digito correto deve ser '+ data.resultado +'.');
+                            else data.status == 'ok';
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert('Error !\nO campo Container esta vazio.');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </html>

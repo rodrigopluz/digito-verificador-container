@@ -1,62 +1,66 @@
 <?php
 
 /**
- * valida - containers
+ * valida - digito verificador container
  * referencia - https://es.wikipedia.org/wiki/Contenedor
+ * 
+ * @author: Rodrigo Pereira da Luz
+ * @version: 1.0
  */
 
-$hostname = 'localhost';
+error_reporting(E_ALL);
+ini_set('display_errors', 'off');
+date_default_timezone_set('America/Sao_Paulo');
+set_include_path(get_include_path() . PATH_SEPARATOR .  './lib/');
+
+$hostname = '127.0.0.1';
 $database = 'sys_dvc';
-$username = 'root';
+$root = 'root';
 $password = '';
 
-$conn = new PDO("mysql:host=$servername; dbname=$database; charset=utf8", $username, $password);
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$conn->setAttribute(PDO::ATTR_CASE, PDO::CASE_UPPER);
+$dbconn = new PDO("mysql:host=127.0.0.1;dbname=sys_dvc;charset=utf8",$root,$password);
+$dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION, PDO::ATTR_CASE, PDO::CASE_UPPER);
+var_dump($dbconn);
+exit;
 
-// $conn = new mysqli($hostname, $database, $username, $password);
-$request = $_REQUEST['digito'];
+$request = strtoupper($_REQUEST['container']);
+validarContainers($request);
 
-class DigitoVerificadorContainer 
+function validarContainers(String $request)
 {
-    public function validarContainers(String $request)
-    {
-        $soma_letras = 0;
-        $soma_numeros = 0;
+    $soma_letras = 0;
+    $soma_numeros = 0;
+    
+    $numero = explode('-', $request);
+    $arrays = str_split($numero[0]);
+    
+    $query = "SELECT prefix_letra, prefix_numero FROM num_prefixo";
+    // $sql = $dbconn->prepare($query);
+    
 
-        $numero = explode('-', $request);
-        $arrays = str_split($numero[0]);
-        
-        var_dump($arrays);
-        $sql = "SELECT * FROM num_prefixo";
-        $stmt = $conn->prepare($sql)->execute();
-        $prefixos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        var_dump($prefixos);
-        exit;
+    $prefixos = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($arrays as $index => $array) {
-            /*- calculo dos 4 primeiros digitos - que seriam as letras -*/
-            foreach ($prefixos as $key => $pf) {
-                if ($pf->prefix_letra == $array) {
-                    $soma_letras += $pf->prefix_numero * pow(2, $index);
-                }
-            }
-
-            /*- calculo dos demais digitos - que seriam os numeros -*/
-            if ($index > 3) {
-                $soma_numeros +=  $array * pow(2, $index);
+    foreach ($arrays as $index => $array) {
+        /*- calculo dos 4 primeiros digitos - que seriam as letras -*/
+        foreach ($prefixos as $key => $pf) {
+            if ($pf->prefix_letra == $array) {
+                $soma_letras += $pf->prefix_numero * pow(2, $index);
             }
         }
 
-        $soma = $soma_letras + $soma_numeros;
-        $divide = ($soma / 11);
-        $multiplica = (intval($divide) * 11);
-        $resultado = ($soma - $multiplica);
-
-        if ($resultado > 9) $digito = 0;
-        else $digito = $resultado;
-
-        return $digito;
+        /*- calculo dos demais digitos - que seriam os numeros -*/
+        if ($index > 3) {
+            $soma_numeros +=  $array * pow(2, $index);
+        }
     }
+
+    $soma = $soma_letras + $soma_numeros;
+    $divide = ($soma / 11);
+    $multiplica = (intval($divide) * 11);
+    $resultado = ($soma - $multiplica);
+
+    if ($resultado > 9) $digito = 0;
+    else $digito = $resultado;
+
+    return $digito;
 }
