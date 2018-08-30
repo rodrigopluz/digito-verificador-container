@@ -1,17 +1,13 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Digito Verificador de Container</title>
-        
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js"></script>
+        <link rel="stylesheet" href="assets/css/fontawesome.css">
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/style.css">
     </head>
     <body>
         <nav class="navbar text-center navbar-expand-md navbar-dark bg-dark">
@@ -34,6 +30,11 @@
             </div>
         </main>
     </body>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/fontawesome.js"></script>
+    <script src="assets/js/jquery.mask.js"></script>
+    <script src="assets/js/jquery.bs.msgbox.js"></script>
     <script>
         $(document).ready(function () {
             /**
@@ -52,8 +53,22 @@
                         dataType: 'json',
                         data: { container: this.value },
                         success: function(data) {
-                            if (data.status == 'error') alert('Erro, Digito verificador inválido.\nO Digito correto deve ser '+ data.resultado +'.');
-                            else data.status == 'ok';
+                            if (data.status == 'error') {
+                                $('body').bsMsgBox({
+                                    icon: 'info',
+                                    iconset: 'fontawesome',
+                                    title: 'Digito Verificador',
+                                    text: 'Digito verificador inválido.'+'<br/>'+'O Digito correto deve ser <strong>'+ data.resultado +'</strong>.'
+                                });
+                            } else {
+                                data.status == 'ok';
+                                $('body').bsMsgBox({
+                                    icon: 'ok',
+                                    text: 'CNT correto',
+                                    iconset: 'fontawesome',
+                                    title: 'Digito Verificador'
+                                });
+                            } 
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             alert('Error !\nO campo Container esta vazio.');

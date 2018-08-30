@@ -1,8 +1,9 @@
 <?php
 
 /**
- * valida - digito verificador container
- * referencia - https://es.wikipedia.org/wiki/Contenedor
+ * validação - digito verificador container
+ * referencia de pesquisa 
+ * @link https://es.wikipedia.org/wiki/Contenedor
  * 
  * @author: Rodrigo Pereira da Luz
  * @version: 1.0
