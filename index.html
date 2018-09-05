@@ -58,15 +58,15 @@
                                     icon: 'info',
                                     iconset: 'fontawesome',
                                     title: 'Digito Verificador',
-                                    text: 'Digito verificador inválido.'+'<br/>'+'O Digito correto deve ser <strong>'+ data.resultado +'</strong>.'
+                                    text: '<p>Digito Verificador inválido.'+'<br/>'+'O Digito correto deve ser <strong>'+ data.resultado +'</strong>.</p>'
                                 });
                             } else {
                                 data.status == 'ok';
                                 $('body').bsMsgBox({
                                     icon: 'ok',
-                                    text: 'CNT correto',
                                     iconset: 'fontawesome',
-                                    title: 'Digito Verificador'
+                                    title: 'Digito Verificador',
+                                    text: '<br/>'+'<p>N° do Container está correto.</p>'
                                 });
                             } 
                         },
